@@ -1,0 +1,1437 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>صلاح الدين القرشي | متخصص تقنيات المعلومات</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      /* ===================== المتغيرات (لوحة ألوان النيون البنفسجي والأزرق) ===================== */
+      :root {
+        --bg: #050508; /* أسود عميق جداً */
+        --bg-2: #0a0a12;
+        --card: rgba(255, 255, 255, 0.03);
+        --border: rgba(255, 255, 255, 0.08);
+        --text: #f8fafc;
+        --muted: #94a3b8;
+        --primary: #8b5cf6; /* بنفسجي نيون */
+        --secondary: #06b6d4; /* أزرق سماوي */
+        --gradient: linear-gradient(135deg, #8b5cf6, #06b6d4);
+        --shadow: 0 20px 50px rgba(139, 92, 246, 0.15);
+        --glass-blur: blur(16px);
+      }
+
+      [data-theme="light"] {
+        --bg: #f8fafc;
+        --bg-2: #ffffff;
+        --card: rgba(0, 0, 0, 0.03);
+        --border: rgba(0, 0, 0, 0.08);
+        --text: #0f172a;
+        --muted: #64748b;
+        --shadow: 0 20px 50px rgba(0, 0, 0, 0.08);
+      }
+
+      /* ===================== الأساسيات ===================== */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html {
+        scroll-behavior: smooth;
+        scroll-padding-top: 90px;
+      }
+      body {
+        font-family: "Cairo", system-ui, sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        overflow-x: hidden;
+        transition:
+          background 0.4s ease,
+          color 0.4s ease;
+        line-height: 1.8;
+      }
+      a {
+        text-decoration: none;
+        color: inherit;
+      }
+      ul {
+        list-style: none;
+      }
+      img {
+        max-width: 100%;
+      }
+      .container {
+        width: min(1140px, 92%);
+        margin-inline: auto;
+      }
+
+      /* ===================== الخلفية المتحركة ===================== */
+      .bg-blobs {
+        position: fixed;
+        inset: 0;
+        z-index: -2;
+        overflow: hidden;
+        pointer-events: none;
+      }
+      .blob {
+        position: absolute;
+        border-radius: 50%;
+        filter: blur(100px);
+        opacity: 0.4;
+        animation: float 20s ease-in-out infinite;
+      }
+      .blob-1 {
+        width: 500px;
+        height: 500px;
+        background: #8b5cf6;
+        top: -150px;
+        right: -100px;
+      }
+      .blob-2 {
+        width: 450px;
+        height: 450px;
+        background: #06b6d4;
+        bottom: -150px;
+        left: -100px;
+        animation-delay: -6s;
+      }
+      .blob-3 {
+        width: 400px;
+        height: 400px;
+        background: #ec4899;
+        top: 40%;
+        left: 40%;
+        animation-delay: -12s;
+        opacity: 0.25;
+      }
+      @keyframes float {
+        0%,
+        100% {
+          transform: translate(0, 0) scale(1);
+        }
+        33% {
+          transform: translate(50px, -60px) scale(1.1);
+        }
+        66% {
+          transform: translate(-40px, 40px) scale(0.9);
+        }
+      }
+
+      /* ===================== شريط التنقل (زجاجي) ===================== */
+      .navbar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 100;
+        padding: 18px 0;
+        transition: all 0.4s ease;
+      }
+      .navbar.scrolled {
+        padding: 10px 0;
+        background: rgba(5, 5, 8, 0.7);
+        backdrop-filter: var(--glass-blur);
+        border-bottom: 1px solid var(--border);
+      }
+      .nav-inner {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
+      }
+      .logo {
+        font-size: 1.55rem;
+        font-weight: 900;
+        letter-spacing: -0.5px;
+      }
+      .logo span {
+        background: var(--gradient);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+      }
+      .nav-links {
+        display: flex;
+        gap: 32px;
+      }
+      .nav-links a {
+        position: relative;
+        font-weight: 600;
+        font-size: 0.95rem;
+        color: var(--muted);
+        transition: color 0.3s;
+      }
+      .nav-links a::after {
+        content: "";
+        position: absolute;
+        bottom: -6px;
+        right: 0;
+        width: 0;
+        height: 2px;
+        background: var(--gradient);
+        border-radius: 2px;
+        transition: width 0.35s ease;
+      }
+      .nav-links a:hover,
+      .nav-links a.active {
+        color: var(--text);
+      }
+      .nav-links a:hover::after,
+      .nav-links a.active::after {
+        width: 100%;
+      }
+      .nav-actions {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      .theme-btn,
+      .menu-btn {
+        background: var(--card);
+        border: 1px solid var(--border);
+        color: var(--text);
+        width: 42px;
+        height: 42px;
+        border-radius: 12px;
+        cursor: pointer;
+        font-size: 1.1rem;
+        display: grid;
+        place-items: center;
+        transition: 0.3s;
+        backdrop-filter: blur(5px);
+      }
+      .theme-btn:hover,
+      .menu-btn:hover {
+        transform: translateY(-3px);
+        border-color: var(--primary);
+        box-shadow: 0 0 15px rgba(139, 92, 246, 0.3);
+      }
+      .menu-btn {
+        display: none;
+        flex-direction: column;
+        gap: 5px;
+      }
+      .menu-btn span {
+        width: 20px;
+        height: 2px;
+        background: var(--text);
+        border-radius: 2px;
+        transition: 0.3s;
+      }
+      .menu-btn.open span:nth-child(1) {
+        transform: translateY(7px) rotate(45deg);
+      }
+      .menu-btn.open span:nth-child(2) {
+        opacity: 0;
+      }
+      .menu-btn.open span:nth-child(3) {
+        transform: translateY(-7px) rotate(-45deg);
+      }
+
+      /* ===================== الهيرو ===================== */
+      .hero {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        padding: 120px 0 80px;
+        position: relative;
+      }
+      .hero-grid {
+        display: grid;
+        grid-template-columns: 1.15fr 0.85fr;
+        gap: 60px;
+        align-items: center;
+      }
+      .hello {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: var(--card);
+        border: 1px solid var(--border);
+        padding: 8px 18px;
+        border-radius: 999px;
+        font-size: 0.9rem;
+        color: var(--muted);
+        margin-bottom: 22px;
+        backdrop-filter: blur(5px);
+      }
+      .hello .dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: #22c55e;
+        box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.6);
+        animation: pulse 2s infinite;
+      }
+      @keyframes pulse {
+        70% {
+          box-shadow: 0 0 0 12px rgba(34, 197, 94, 0);
+        }
+        100% {
+          box-shadow: 0 0 0 0 rgba(34, 197, 94, 0);
+        }
+      }
+      .hero h1 {
+        font-size: clamp(2rem, 4vw, 3.2rem);
+        font-weight: 900;
+        line-height: 1.3;
+        margin-bottom: 14px;
+      }
+      .hero h1 .grad {
+        background: var(--gradient);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+      }
+      .typed-wrap {
+        font-size: clamp(1.05rem, 2.4vw, 1.4rem);
+        font-weight: 700;
+        color: var(--secondary);
+        min-height: 2.2em;
+        margin-bottom: 18px;
+      }
+      .cursor {
+        display: inline-block;
+        width: 3px;
+        height: 1.05em;
+        background: var(--secondary);
+        margin-inline-start: 4px;
+        vertical-align: -3px;
+        animation: blink 0.8s steps(1) infinite;
+      }
+      @keyframes blink {
+        50% {
+          opacity: 0;
+        }
+      }
+      .hero p.desc {
+        color: var(--muted);
+        max-width: 550px;
+        margin-bottom: 32px;
+        font-size: 1.02rem;
+      }
+      .hero-btns {
+        display: flex;
+        gap: 14px;
+        flex-wrap: wrap;
+        margin-bottom: 34px;
+      }
+      .btn {
+        padding: 14px 30px;
+        border-radius: 14px;
+        font-weight: 700;
+        font-size: 0.98rem;
+        cursor: pointer;
+        border: none;
+        font-family: inherit;
+        transition: 0.35s;
+        display: inline-flex;
+        align-items: center;
+        gap: 9px;
+      }
+      .btn-primary {
+        background: var(--gradient);
+        color: #fff;
+        box-shadow: 0 10px 30px -8px rgba(139, 92, 246, 0.6);
+        position: relative;
+        overflow: hidden;
+      }
+      .btn-primary::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 255, 255, 0.2),
+          transparent
+        );
+        transition: left 0.6s;
+      }
+      .btn-primary:hover::after {
+        left: 100%;
+      }
+      .btn-primary:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 20px 40px -10px rgba(139, 92, 246, 0.8);
+      }
+      .btn-ghost {
+        background: transparent;
+        color: var(--text);
+        border: 1px solid var(--border);
+      }
+      .btn-ghost:hover {
+        background: var(--card);
+        transform: translateY(-4px);
+        border-color: var(--primary);
+      }
+      .socials {
+        display: flex;
+        gap: 12px;
+      }
+      .socials a {
+        width: 44px;
+        height: 44px;
+        border-radius: 12px;
+        display: grid;
+        place-items: center;
+        background: var(--card);
+        border: 1px solid var(--border);
+        transition: 0.3s;
+        backdrop-filter: blur(5px);
+      }
+      .socials a:hover {
+        transform: translateY(-5px) rotate(-6deg);
+        border-color: var(--primary);
+        color: var(--primary);
+        box-shadow: 0 0 20px rgba(139, 92, 246, 0.4);
+      }
+      .socials svg {
+        width: 20px;
+        height: 20px;
+        fill: currentColor;
+      }
+
+      /* الصورة الرمزية */
+      .hero-visual {
+        display: grid;
+        place-items: center;
+        position: relative;
+      }
+      .avatar-ring {
+        width: min(340px, 78vw);
+        aspect-ratio: 1;
+        border-radius: 50%;
+        background: var(--gradient);
+        padding: 5px;
+        position: relative;
+        animation: spinGlow 8s linear infinite;
+      }
+      @keyframes spinGlow {
+        0% {
+          box-shadow:
+            0 0 0 0 rgba(139, 92, 246, 0.5),
+            0 0 60px rgba(6, 182, 212, 0.4);
+        }
+        50% {
+          box-shadow:
+            0 0 0 20px rgba(139, 92, 246, 0),
+            0 0 100px rgba(6, 182, 212, 0.6);
+        }
+        100% {
+          box-shadow:
+            0 0 0 0 rgba(139, 92, 246, 0.5),
+            0 0 60px rgba(6, 182, 212, 0.4);
+        }
+      }
+      .avatar {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        background: var(--bg-2);
+        display: grid;
+        place-items: center;
+        font-size: clamp(4rem, 12vw, 7rem);
+        font-weight: 900;
+        background-image: var(--gradient);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        border: 6px solid var(--bg);
+      }
+      .float-chip {
+        position: absolute;
+        background: rgba(10, 10, 18, 0.8);
+        border: 1px solid var(--border);
+        padding: 10px 16px;
+        border-radius: 14px;
+        font-size: 0.85rem;
+        font-weight: 700;
+        box-shadow: var(--shadow);
+        animation: floatY 4s ease-in-out infinite;
+        backdrop-filter: blur(8px);
+      }
+      .chip-1 {
+        top: 8%;
+        left: -4%;
+      }
+      .chip-2 {
+        bottom: 14%;
+        right: -6%;
+        animation-delay: -2s;
+      }
+      .chip-3 {
+        bottom: -2%;
+        left: 8%;
+        animation-delay: -1s;
+      }
+      @keyframes floatY {
+        0%,
+        100% {
+          transform: translateY(0);
+        }
+        50% {
+          transform: translateY(-14px);
+        }
+      }
+
+      /* ===================== الأقسام العامة ===================== */
+      section {
+        padding: 100px 0;
+        position: relative;
+      }
+      .section-head {
+        text-align: center;
+        margin-bottom: 60px;
+      }
+      .section-tag {
+        color: var(--secondary);
+        font-weight: 700;
+        font-size: 0.9rem;
+        letter-spacing: 2px;
+        display: block;
+        margin-bottom: 10px;
+      }
+      .section-head h2 {
+        font-size: clamp(1.8rem, 4vw, 2.7rem);
+        font-weight: 900;
+      }
+      .section-head h2 span {
+        background: var(--gradient);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+      }
+      .section-head p {
+        color: var(--muted);
+        max-width: 560px;
+        margin: 14px auto 0;
+      }
+
+      /* ===================== من أنا ===================== */
+      .about-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 60px;
+        align-items: center;
+      }
+      .about-text h3 {
+        font-size: 1.5rem;
+        margin-bottom: 18px;
+      }
+      .about-text p {
+        color: var(--muted);
+        margin-bottom: 16px;
+      }
+      .stats {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 18px;
+        margin-top: 30px;
+      }
+      .stat {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 18px;
+        padding: 22px;
+        text-align: center;
+        transition: 0.35s;
+        backdrop-filter: blur(10px);
+      }
+      .stat:hover {
+        transform: translateY(-6px);
+        border-color: var(--primary);
+        box-shadow: 0 10px 30px rgba(139, 92, 246, 0.2);
+      }
+      .stat .num {
+        font-size: 2rem;
+        font-weight: 900;
+        background: var(--gradient);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+      }
+      .stat .lbl {
+        color: var(--muted);
+        font-size: 0.9rem;
+        font-weight: 600;
+      }
+
+      /* ===================== المهارات ===================== */
+      .skills-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 26px 46px;
+      }
+      .skill {
+        margin-bottom: 6px;
+      }
+      .skill-top {
+        display: flex;
+        justify-content: space-between;
+        font-weight: 700;
+        margin-bottom: 9px;
+        font-size: 0.95rem;
+      }
+      .bar {
+        height: 10px;
+        background: var(--card);
+        border-radius: 99px;
+        overflow: hidden;
+        border: 1px solid var(--border);
+      }
+      .bar i {
+        display: block;
+        height: 100%;
+        width: 0;
+        border-radius: 99px;
+        background: var(--gradient);
+        transition: width 1.4s cubic-bezier(0.25, 0.9, 0.35, 1);
+        box-shadow: 0 0 15px rgba(139, 92, 246, 0.5);
+      }
+
+      /* ===================== الأعمال ===================== */
+      .cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+        gap: 26px;
+      }
+      .card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 22px;
+        padding: 30px 26px;
+        transition: 0.4s;
+        position: relative;
+        overflow: hidden;
+        backdrop-filter: blur(10px);
+      }
+      .card::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        opacity: 0;
+        transition: 0.4s;
+        background: radial-gradient(
+          400px circle at var(--mx, 50%) var(--my, 50%),
+          rgba(139, 92, 246, 0.15),
+          transparent 65%
+        );
+      }
+      .card:hover::before {
+        opacity: 1;
+      }
+      .card:hover {
+        transform: translateY(-10px);
+        border-color: var(--primary);
+        box-shadow: var(--shadow);
+      }
+      .card-icon {
+        width: 56px;
+        height: 56px;
+        border-radius: 16px;
+        display: grid;
+        place-items: center;
+        background: var(--gradient);
+        font-size: 1.5rem;
+        margin-bottom: 20px;
+        box-shadow: 0 12px 28px -10px rgba(139, 92, 246, 0.8);
+      }
+      .card h4 {
+        font-size: 1.18rem;
+        margin-bottom: 10px;
+      }
+      .card p {
+        color: var(--muted);
+        font-size: 0.94rem;
+        margin-bottom: 18px;
+      }
+      .tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+      .tags span {
+        font-size: 0.76rem;
+        font-weight: 700;
+        padding: 5px 12px;
+        border-radius: 99px;
+        background: rgba(139, 92, 246, 0.15);
+        color: var(--primary);
+        border: 1px solid rgba(139, 92, 246, 0.3);
+      }
+
+      /* ===================== تواصل ===================== */
+      .contact-wrap {
+        display: grid;
+        grid-template-columns: 0.9fr 1.1fr;
+        gap: 50px;
+        align-items: start;
+      }
+      .info-item {
+        display: flex;
+        gap: 16px;
+        align-items: center;
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 18px 20px;
+        margin-bottom: 16px;
+        transition: 0.35s;
+        backdrop-filter: blur(10px);
+      }
+      .info-item:hover {
+        transform: translateX(-6px);
+        border-color: var(--primary);
+        box-shadow: 0 10px 30px rgba(139, 92, 246, 0.15);
+      }
+      .info-item .ico {
+        width: 46px;
+        height: 46px;
+        flex: none;
+        border-radius: 13px;
+        display: grid;
+        place-items: center;
+        background: var(--gradient);
+        font-size: 1.15rem;
+        color: white;
+        box-shadow: 0 0 15px rgba(139, 92, 246, 0.4);
+      }
+      .info-item small {
+        display: block;
+        color: var(--muted);
+        font-size: 0.8rem;
+      }
+      .info-item strong {
+        font-size: 0.98rem;
+        direction: ltr;
+        display: inline-block;
+      }
+      form {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 22px;
+        padding: 32px;
+        display: grid;
+        gap: 16px;
+        backdrop-filter: blur(10px);
+      }
+      .field {
+        display: grid;
+        gap: 7px;
+      }
+      .field label {
+        font-size: 0.88rem;
+        font-weight: 700;
+        color: var(--muted);
+      }
+      input,
+      textarea {
+        font-family: inherit;
+        font-size: 0.95rem;
+        color: var(--text);
+        background: var(--bg-2);
+        border: 1px solid var(--border);
+        border-radius: 13px;
+        padding: 13px 16px;
+        outline: none;
+        transition: 0.3s;
+        width: 100%;
+      }
+      input:focus,
+      textarea:focus {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.15);
+      }
+      textarea {
+        resize: vertical;
+        min-height: 130px;
+      }
+      form .btn-primary {
+        justify-content: center;
+        width: 100%;
+      }
+
+      /* ===================== الفوتر ===================== */
+      footer {
+        text-align: center;
+        padding: 36px 0;
+        border-top: 1px solid var(--border);
+        color: var(--muted);
+        font-size: 0.9rem;
+      }
+      footer .heart {
+        color: #ef4444;
+      }
+
+      /* ===================== زر الصعود ===================== */
+      .to-top {
+        position: fixed;
+        bottom: 28px;
+        left: 28px;
+        width: 50px;
+        height: 50px;
+        border-radius: 14px;
+        background: var(--gradient);
+        color: #fff;
+        border: none;
+        cursor: pointer;
+        font-size: 1.2rem;
+        display: grid;
+        place-items: center;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(20px);
+        transition: 0.35s;
+        z-index: 90;
+        box-shadow: 0 14px 30px -10px rgba(139, 92, 246, 0.8);
+      }
+      .to-top.show {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+      }
+      .to-top:hover {
+        transform: translateY(-5px);
+      }
+
+      /* ===================== أنيميشن الظهور ===================== */
+      .reveal {
+        opacity: 0;
+        transform: translateY(45px);
+        transition:
+          opacity 0.8s ease,
+          transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+      }
+      .reveal.visible {
+        opacity: 1;
+        transform: none;
+      }
+
+      /* ===================== استجابة الشاشات ===================== */
+      @media (max-width: 900px) {
+        .hero-grid,
+        .about-grid,
+        .contact-wrap {
+          grid-template-columns: 1fr;
+        }
+        .hero-visual {
+          order: -1;
+          margin-bottom: 20px;
+        }
+        .hero {
+          padding-top: 130px;
+          text-align: center;
+        }
+        .hero p.desc {
+          margin-inline: auto;
+        }
+        .hero-btns,
+        .socials {
+          justify-content: center;
+        }
+        .skills-grid {
+          grid-template-columns: 1fr;
+        }
+        .menu-btn {
+          display: flex;
+        }
+        .nav-links {
+          position: absolute;
+          top: 100%;
+          left: 0;
+          right: 0;
+          flex-direction: column;
+          gap: 0;
+          background: rgba(10, 10, 18, 0.95);
+          border: 1px solid var(--border);
+          border-radius: 18px;
+          padding: 10px;
+          margin: 8px 4%;
+          display: none;
+          box-shadow: var(--shadow);
+          backdrop-filter: blur(20px);
+        }
+        .nav-links.open {
+          display: flex;
+          animation: dropIn 0.35s ease;
+        }
+        @keyframes dropIn {
+          from {
+            opacity: 0;
+            transform: translateY(-12px);
+          }
+          to {
+            opacity: 1;
+            transform: none;
+          }
+        }
+        .nav-links li a {
+          display: block;
+          padding: 13px 16px;
+          border-radius: 12px;
+        }
+        .nav-links a::after {
+          display: none;
+        }
+        .nav-links a:hover {
+          background: var(--card);
+        }
+      }
+      @media (max-width: 500px) {
+        section {
+          padding: 70px 0;
+        }
+        .float-chip {
+          font-size: 0.72rem;
+          padding: 8px 12px;
+        }
+        .stats {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- ======= الخلفية ======= -->
+    <div class="bg-blobs">
+      <div class="blob blob-1"></div>
+      <div class="blob blob-2"></div>
+      <div class="blob blob-3"></div>
+    </div>
+
+    <!-- ======= شريط التنقل ======= -->
+    <nav class="navbar" id="navbar">
+      <div class="container nav-inner">
+        <a href="#home" class="logo">صلاح<span>.</span></a>
+        <ul class="nav-links" id="navLinks">
+          <li><a href="#home" class="active">الرئيسية</a></li>
+          <li><a href="#about">من أنا</a></li>
+          <li><a href="#skills">مهاراتي</a></li>
+          <li><a href="#projects">أعمالي</a></li>
+          <li><a href="#contact">تواصل</a></li>
+        </ul>
+        <div class="nav-actions">
+          <button class="theme-btn" id="themeBtn" aria-label="تبديل المظهر">
+            🌙
+          </button>
+          <button class="menu-btn" id="menuBtn" aria-label="القائمة">
+            <span></span><span></span><span></span>
+          </button>
+        </div>
+      </div>
+    </nav>
+
+    <!-- ======= الهيرو ======= -->
+    <header class="hero" id="home">
+      <div class="container hero-grid">
+        <div class="hero-content">
+          <span class="hello"><span class="dot"></span> متاح للعمل الحر</span>
+          <h1>
+            مرحباً، أنا <span class="grad">صلاح الدين محمد سليمان القرشي</span>
+          </h1>
+          <div class="typed-wrap">
+            <span id="typed"></span><span class="cursor"></span>
+          </div>
+          <p class="desc">
+            متخصص تقنيات المعلومات، شغوف بحل المشكلات التقنية وإدارة الأنظمة.
+            أعمل على تطوير البنية التحتية، تأمين البيانات، وبناء حلول برمجية
+            فعالة تلبي احتياجات المؤسسات.
+          </p>
+          <div class="hero-btns">
+            <a href="#contact" class="btn btn-primary">تواصل معي ✦</a>
+            <a href="#projects" class="btn btn-ghost">شاهد أعمالي</a>
+          </div>
+          <div class="socials">
+            <a href="#" aria-label="تويتر"
+              ><svg viewBox="0 0 24 24">
+                <path
+                  d="M18.9 2H22l-7.1 8.1L23.2 22h-6.6l-5.2-6.8L5.5 22H2.4l7.6-8.7L1.2 2h6.8l4.7 6.2L18.9 2Zm-1.1 18h1.8L7.3 3.9H5.4L17.8 20Z"
+                /></svg
+            ></a>
+            <a href="#" aria-label="لينكدإن"
+              ><svg viewBox="0 0 24 24">
+                <path
+                  d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5ZM3 9h4v12H3V9Zm7 0h3.8v1.7h.05c.53-1 1.83-2.05 3.77-2.05C21.4 8.65 22 11 22 14v7h-4v-6.2c0-1.5-.03-3.4-2.07-3.4-2.07 0-2.39 1.62-2.39 3.3V21h-4V9Z"
+                /></svg
+            ></a>
+            <a href="#" aria-label="جيتهاب"
+              ><svg viewBox="0 0 24 24">
+                <path
+                  d="M12 .5A11.5 11.5 0 0 0 .5 12a11.5 11.5 0 0 0 7.86 10.92c.58.1.79-.25.79-.55v-1.94c-3.2.7-3.88-1.54-3.88-1.54-.53-1.33-1.29-1.69-1.29-1.69-1.05-.72.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.55-.29-5.23-1.28-5.23-5.7 0-1.26.45-2.29 1.19-3.1-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.18 1.18a11 11 0 0 1 5.8 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.12 3.05.74.81 1.18 1.84 1.18 3.1 0 4.43-2.69 5.4-5.25 5.69.41.36.78 1.06.78 2.14v3.17c0 .3.2.66.8.55A11.5 11.5 0 0 0 23.5 12A11.5 11.5 0 0 0 12 .5Z"
+                /></svg
+            ></a>
+          </div>
+        </div>
+
+        <div class="hero-visual">
+          <div class="avatar-ring">
+            <div class="avatar">ص</div>
+          </div>
+          <div class="float-chip chip-1">💻 5+ سنوات خبرة</div>
+          <div class="float-chip chip-2">🚀 +40 مشروع تقني</div>
+          <div class="float-chip chip-3">🛡️ أمن وحماية البيانات</div>
+        </div>
+      </div>
+    </header>
+
+    <!-- ======= من أنا ======= -->
+    <section id="about">
+      <div class="container">
+        <div class="section-head reveal">
+          <span class="section-tag">تعرّف عليّ</span>
+          <h2>من <span>أنا</span>؟</h2>
+        </div>
+
+        <div class="about-grid">
+          <div class="about-text reveal">
+            <h3>خبير تقني يحب حل المشكلات 🎯</h3>
+            <p>
+              أنا صلاح الدين، متخصص في تقنيات المعلومات أعمل منذ أكثر من 5 سنوات
+              على إدارة الأنظمة، تأمين الشبكات، وتطوير البنية التحتية للشركات.
+            </p>
+            <p>
+              عملت على مشاريع متعددة تشمل إدارة قواعد البيانات، حماية المعلومات،
+              وبناء أنظمة برمجية متكاملة. أستمتع بتعلّم كل جديد في عالم التقنية
+              وأشارك ما أتعلّمه مع المجتمع.
+            </p>
+            <div class="stats">
+              <div class="stat">
+                <div class="num" data-target="5">0</div>
+                <div class="lbl">سنوات خبرة</div>
+              </div>
+              <div class="stat">
+                <div class="num" data-target="42">0</div>
+                <div class="lbl">مشروع مكتمل</div>
+              </div>
+              <div class="stat">
+                <div class="num" data-target="28">0</div>
+                <div class="lbl">عميل سعيد</div>
+              </div>
+              <div class="stat">
+                <div class="num" data-target="12">0</div>
+                <div class="lbl">شهادة معتمدة</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="reveal" style="display: grid; gap: 16px">
+            <div class="info-item">
+              <div class="ico">🎓</div>
+              <div>
+                <small>التعليم</small
+                ><strong>بكالوريوس تقنيات المعلومات</strong>
+              </div>
+            </div>
+            <div class="info-item">
+              <div class="ico">📍</div>
+              <div><small>الموقع</small><strong>الحديدة، اليمن</strong></div>
+            </div>
+            <div class="info-item">
+              <div class="ico">💼</div>
+              <div>
+                <small>الحالة</small><strong>متاح لمشاريع جديدة</strong>
+              </div>
+            </div>
+            <div class="info-item">
+              <div class="ico">🌐</div>
+              <div>
+                <small>اللغات</small><strong>العربية · الإنجليزية</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======= المهارات ======= -->
+    <section id="skills">
+      <div class="container">
+        <div class="section-head reveal">
+          <span class="section-tag">ما أُتقنه</span>
+          <h2>مهاراتي <span>التقنية</span></h2>
+          <p>
+            مجموعة من الأدوات والتقنيات التي أستخدمها يومياً في إدارة وتأمين
+            الأنظمة
+          </p>
+        </div>
+
+        <div class="skills-grid reveal">
+          <div class="skill">
+            <div class="skill-top">
+              <span>إدارة الشبكات (Networking)</span><span>95%</span>
+            </div>
+            <div class="bar"><i data-width="95"></i></div>
+          </div>
+          <div class="skill">
+            <div class="skill-top">
+              <span>الأمن السيبراني (Cybersecurity)</span><span>90%</span>
+            </div>
+            <div class="bar"><i data-width="90"></i></div>
+          </div>
+          <div class="skill">
+            <div class="skill-top">
+              <span>قواعد البيانات (SQL)</span><span>88%</span>
+            </div>
+            <div class="bar"><i data-width="88"></i></div>
+          </div>
+          <div class="skill">
+            <div class="skill-top">
+              <span>لغة بايثون (Python)</span><span>85%</span>
+            </div>
+            <div class="bar"><i data-width="85"></i></div>
+          </div>
+          <div class="skill">
+            <div class="skill-top">
+              <span>لغة جافا (Java)</span><span>80%</span>
+            </div>
+            <div class="bar"><i data-width="80"></i></div>
+          </div>
+          <div class="skill">
+            <div class="skill-top">
+              <span>الحوسبة السحابية (Cloud)</span><span>85%</span>
+            </div>
+            <div class="bar"><i data-width="85"></i></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======= الأعمال ======= -->
+    <section id="projects">
+      <div class="container">
+        <div class="section-head reveal">
+          <span class="section-tag">معرض الأعمال</span>
+          <h2>أحدث <span>مشاريعي</span></h2>
+          <p>نماذج من المشاريع التقنية التي عملت عليها مؤخراً</p>
+        </div>
+
+        <div class="cards">
+          <article class="card reveal">
+            <div class="card-icon">🌐</div>
+            <h4>نظام إدارة الشبكات</h4>
+            <p>
+              تصميم وتنفيذ شبكة متكاملة لشركة متوسطة الحجم مع أنظمة حماية
+              متقدمة.
+            </p>
+            <div class="tags">
+              <span>Cisco</span><span>Firewalls</span><span>VPN</span>
+            </div>
+          </article>
+
+          <article class="card reveal">
+            <div class="card-icon">🛡️</div>
+            <h4>تأمين قواعد البيانات</h4>
+            <p>
+              تطبيق معايير الأمان وحماية البيانات الحساسة من الاختراقات
+              والثغرات.
+            </p>
+            <div class="tags">
+              <span>SQL</span><span>Encryption</span><span>Auditing</span>
+            </div>
+          </article>
+
+          <article class="card reveal">
+            <div class="card-icon">⚙️</div>
+            <h4>تطبيق إدارة السيرفرات</h4>
+            <p>بناء أداة لأتمتة عمليات النسخ الاحتياطي ومراقبة أداء الخوادم.</p>
+            <div class="tags">
+              <span>Python</span><span>Linux</span><span>Bash</span>
+            </div>
+          </article>
+
+          <article class="card reveal">
+            <div class="card-icon">☁️</div>
+            <h4>البنية التحتية السحابية</h4>
+            <p>نقل بيانات مؤسسة إلى السحابة مع ضمان استمرارية العمل والأمان.</p>
+            <div class="tags">
+              <span>AWS</span><span>Azure</span><span>Docker</span>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======= تواصل ======= -->
+    <section id="contact">
+      <div class="container">
+        <div class="section-head reveal">
+          <span class="section-tag">لنعمل معاً</span>
+          <h2>تواصل <span>معي</span></h2>
+          <p>عندك فكرة أو مشروع تقني؟ يسعدني أن أسمع منك</p>
+        </div>
+
+        <div class="contact-wrap">
+          <div class="reveal">
+            <div class="info-item">
+              <div class="ico">✉️</div>
+              <div>
+                <small>البريد الإلكتروني</small
+                ><strong>salah@example.com</strong>
+              </div>
+            </div>
+            <div class="info-item">
+              <div class="ico">📞</div>
+              <div>
+                <small>رقم الجوال</small><strong>+967 776701073</strong>
+              </div>
+            </div>
+            <div class="info-item">
+              <div class="ico">📍</div>
+              <div><small>العنوان</small><strong>الحديدة، اليمن</strong></div>
+            </div>
+            <div class="info-item">
+              <div class="ico">⏰</div>
+              <div>
+                <small>ساعات العمل</small
+                ><strong>الأحد - الخميس · 9ص - 6م</strong>
+              </div>
+            </div>
+          </div>
+
+          <form id="contactForm" class="reveal">
+            <div class="field">
+              <label for="name">الاسم الكامل</label>
+              <input
+                id="name"
+                type="text"
+                placeholder="اكتب اسمك هنا"
+                required
+              />
+            </div>
+            <div class="field">
+              <label for="email">البريد الإلكتروني</label>
+              <input
+                id="email"
+                type="email"
+                placeholder="example@mail.com"
+                required
+              />
+            </div>
+            <div class="field">
+              <label for="msg">رسالتك</label>
+              <textarea
+                id="msg"
+                placeholder="أخبرني عن مشروعك..."
+                required
+              ></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">
+              إرسال الرسالة ✈️
+            </button>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======= الفوتر ======= -->
+    <footer>
+      <div class="container">
+        صُنع بـ <span class="heart">♥</span> بواسطة صلاح الدين ©
+        <span id="year"></span>
+      </div>
+    </footer>
+
+    <button class="to-top" id="toTop" aria-label="العودة للأعلى">↑</button>
+
+    <script>
+      /* ========== 1. الوضع الليلي / النهاري ========== */
+      const themeBtn = document.getElementById("themeBtn");
+      const root = document.documentElement;
+      const saved = localStorage.getItem("theme");
+      if (saved) {
+        root.setAttribute("data-theme", saved);
+      }
+      themeBtn.textContent =
+        root.getAttribute("data-theme") === "light" ? "☀️" : "🌙";
+
+      themeBtn.addEventListener("click", () => {
+        const isLight = root.getAttribute("data-theme") === "light";
+        const next = isLight ? "dark" : "light";
+        root.setAttribute("data-theme", next);
+        localStorage.setItem("theme", next);
+        themeBtn.textContent = next === "light" ? "☀️" : "🌙";
+      });
+
+      /* ========== 2. تأثير الكتابة ========== */
+      const phrases = [
+        "متخصص تقنيات المعلومات",
+        "أدرس إدارة الشبكات وقواعد البيانات",
+        "أعمل على حماية الأنظمة وتطويرها",
+        "أتقن Python, Java, SQL",
+      ];
+      const typedEl = document.getElementById("typed");
+      let pi = 0,
+        ci = 0,
+        deleting = false;
+
+      function typeLoop() {
+        const word = phrases[pi];
+        typedEl.textContent = word.slice(0, ci);
+
+        if (!deleting && ci < word.length) {
+          ci++;
+          setTimeout(typeLoop, 90);
+        } else if (!deleting && ci === word.length) {
+          deleting = true;
+          setTimeout(typeLoop, 1600);
+        } else if (deleting && ci > 0) {
+          ci--;
+          setTimeout(typeLoop, 45);
+        } else {
+          deleting = false;
+          pi = (pi + 1) % phrases.length;
+          setTimeout(typeLoop, 300);
+        }
+      }
+      typeLoop();
+
+      /* ========== 3. شريط التنقل عند التمرير ========== */
+      const navbar = document.getElementById("navbar");
+      const toTop = document.getElementById("toTop");
+
+      window.addEventListener("scroll", () => {
+        navbar.classList.toggle("scrolled", window.scrollY > 40);
+        toTop.classList.toggle("show", window.scrollY > 400);
+      });
+
+      toTop.addEventListener("click", () =>
+        window.scrollTo({ top: 0, behavior: "smooth" }),
+      );
+
+      /* ========== 4. قائمة الموبايل ========== */
+      const menuBtn = document.getElementById("menuBtn");
+      const navLinks = document.getElementById("navLinks");
+
+      menuBtn.addEventListener("click", () => {
+        menuBtn.classList.toggle("open");
+        navLinks.classList.toggle("open");
+      });
+
+      navLinks.querySelectorAll("a").forEach((a) => {
+        a.addEventListener("click", () => {
+          menuBtn.classList.remove("open");
+          navLinks.classList.remove("open");
+        });
+      });
+
+      /* ========== 5. تفعيل الرابط النشط ========== */
+      const sections = document.querySelectorAll("section[id], header[id]");
+      const links = document.querySelectorAll(".nav-links a");
+
+      window.addEventListener("scroll", () => {
+        let current = "";
+        sections.forEach((sec) => {
+          if (window.scrollY >= sec.offsetTop - 150) current = sec.id;
+        });
+        links.forEach((l) => {
+          l.classList.toggle(
+            "active",
+            l.getAttribute("href") === "#" + current,
+          );
+        });
+      });
+
+      /* ========== 6. أنيميشن الظهور ========== */
+      const revealObserver = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("visible");
+              revealObserver.unobserve(entry.target);
+            }
+          });
+        },
+        { threshold: 0.15 },
+      );
+
+      document
+        .querySelectorAll(".reveal")
+        .forEach((el) => revealObserver.observe(el));
+
+      /* ========== 7. أشرطة المهارات ========== */
+      const barObserver = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.querySelectorAll(".bar i").forEach((bar, i) => {
+                setTimeout(() => {
+                  bar.style.width = bar.dataset.width + "%";
+                }, i * 130);
+              });
+              barObserver.unobserve(entry.target);
+            }
+          });
+        },
+        { threshold: 0.3 },
+      );
+
+      const skillsSection = document.querySelector(".skills-grid");
+      if (skillsSection) barObserver.observe(skillsSection);
+
+      /* ========== 8. عدّاد الأرقام ========== */
+      const counterObserver = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (!entry.isIntersecting) return;
+            entry.target.querySelectorAll(".num").forEach((num) => {
+              const target = +num.dataset.target;
+              let current = 0;
+              const step = Math.max(1, Math.ceil(target / 45));
+              const timer = setInterval(() => {
+                current += step;
+                if (current >= target) {
+                  current = target;
+                  clearInterval(timer);
+                }
+                num.textContent = current + (target >= 10 ? "+" : "");
+              }, 35);
+            });
+            counterObserver.unobserve(entry.target);
+          });
+        },
+        { threshold: 0.4 },
+      );
+
+      const statsBox = document.querySelector(".stats");
+      if (statsBox) counterObserver.observe(statsBox);
+
+      /* ========== 9. توهج البطاقات مع المؤشر ========== */
+      document.querySelectorAll(".card").forEach((card) => {
+        card.addEventListener("mousemove", (e) => {
+          const r = card.getBoundingClientRect();
+          card.style.setProperty("--mx", e.clientX - r.left + "px");
+          card.style.setProperty("--my", e.clientY - r.top + "px");
+        });
+      });
+
+      /* ========== 10. نموذج التواصل ========== */
+      document
+        .getElementById("contactForm")
+        .addEventListener("submit", function (e) {
+          e.preventDefault();
+          const btn = this.querySelector("button");
+          const original = btn.textContent;
+          btn.textContent = "تم الإرسال ✓";
+          btn.style.background = "linear-gradient(135deg,#22c55e,#16a34a)";
+          setTimeout(() => {
+            btn.textContent = original;
+            btn.style.background = "";
+            this.reset();
+          }, 2200);
+        });
+
+      /* ========== 11. السنة الحالية ========== */
+      document.getElementById("year").textContent = new Date().getFullYear();
+    </script>
+  </body>
+</html>
